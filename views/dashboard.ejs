@@ -1,0 +1,218 @@
+<%
+  function upperCaseTxt(dataToCase){
+    return dataToCase.charAt(0).toUpperCase() + dataToCase.slice(1).toLowerCase();
+  }
+%>
+<nav class="navbar navbar-expand-sm" style="box-shadow: none !important;">
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="navbar-brand">
+        <h3 class="text-primary" style="font-family: 'Fredoka One', cursive;">Event. <i class="far fa-calendar-check"></i></h3>
+      </a>
+    </li>
+  </ul>
+
+  <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <h5><a class="nav-link" href="/dashboard" style="text-decoration: overline;">Dashboard</a></h5>
+      </li>
+      <li class="nav-item active">
+        <h5><a class="nav-link" href="/eventsview" style="opacity: 0.75;">Event-feed</a></h5>
+      </li>
+    </ul>
+    <li class="nav-item">
+      <h5>
+        <a href="/users/logout" class="btn btn-warning btn-sm" style="font-family: 'Baloo Bhaijaan', 
+            cursive; box-shadow: none !important;"><i class="fas fa-sign-out-alt"></i> Log-out</a>
+      </h5>
+    </li>
+    </li>
+  </ul>
+
+</nav>
+
+<div id="searchDB" class="collapse">
+  <hr style="opacity: 0;">
+  <form action="/eventsearch" method="POST">
+    <label for="eventtype" class="text-primary">Event Type:</label>
+    <select class="text-right custom-select mr-sm-2" name="eventtype" id="eventtype">
+      <option value="Leisure" selected>Leisure</option>
+      <option value="Business">Business</option>
+      <option value="IMPORTANT">Important</option>
+    </select>
+    <label for="dateOrder" class="text-primary">Date Order:</label>
+    <select class="custom-select mr-sm-2" name="dateOrder" id="dateOrder">
+      <option value="asc" selected>Most Recent</option>
+      <option value="desc">Last Scheduled</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Search</button>
+    </select>
+  </form>
+  <hr style="opacity: .0;">
+</div>
+
+<% if( events.length > 0){ %>
+<hr style="opacity: .0;">
+
+<%
+        let leisureAmt = 0;
+        let businessAmt = 0;
+        let importantAmt = 0;
+
+        for (i = 0; i < events.length; i++) {
+
+          if (events[i].type === 'Leisure'){
+            leisureAmt = leisureAmt + 1;
+          } 
+            if (events[i].type === 'Business'){
+            businessAmt = businessAmt + 1;
+          } 
+          if (events[i].type === 'IMPORTANT'){
+            importantAmt = importantAmt + 1;
+          }
+        }
+      %>
+
+<div class="row">
+  <div class="col">
+    <h4 class="text-muted" style="font-family: 'Montserrat', sans-serif;">Event Amounts</h4>
+  </div>
+  <div class="col">
+    <h4 class="text-muted" style="font-family: 'Montserrat', sans-serif;">Event Chart</h4>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th scope="col">Type</th>
+          <th scope="col">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <h6 style="font-family: 'Montserrat', sans-serif; color: #4ABDAC">Leisure</h6>
+          </td>
+          <td>
+            <h6 style="font-family: 'Montserrat', sans-serif; color: #4ABDAC"><%= leisureAmt %></h6>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h6 style="font-family: 'Montserrat', sans-serif; color: #A239CA">Business</h6>
+          </td>
+          <td>
+            <h6 style="font-family: 'Montserrat', sans-serif; color: #A239CA"><%= businessAmt %></h6>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h6 style="font-family: 'Montserrat', sans-serif; color: #FC4A1A">Important</h6>
+          </td>
+          <td>
+            <h6 style="font-family: 'Montserrat', sans-serif; color: #FC4A1A"><%= importantAmt %></h6>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h6 style="font-family: 'Montserrat', sans-serif;">Total</h6>
+          </td>
+          <td>
+            <h6 style="font-family: 'Montserrat', sans-serif;"><%= (importantAmt + leisureAmt + businessAmt )%></h6>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="col">
+  </div>
+  <div class="col">
+    <canvas id="eventamtchart" width="100" height="100" style="max-width: 200px; max-height: 200px;"></canvas>
+  </div>
+</div>
+<input type="text" id="leisureInfo" value="<%= leisureAmt %>" readonly hidden>
+<input type="text" id="busInfo" value="<%= businessAmt %>" readonly hidden>
+<input type="text" id="impInfo" value="<%= importantAmt %>" readonly hidden>
+<hr style="opacity: .0;">
+<script type="text/javascript">
+  let leisureAmt = parseInt(document.getElementById("leisureInfo").value);
+  let businessAmt = parseInt(document.getElementById("busInfo").value);
+  let importantAmt = parseInt(document.getElementById("impInfo").value);
+
+  var ctx = document.getElementById('eventamtchart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: [`Leisure`, `Business`, `Important`],
+      datasets: [{
+        data: [leisureAmt, businessAmt, importantAmt],
+        backgroundColor: ["#4ABDAC", "#A239CA", "#FC4A1A"]
+      }]
+    },
+    options: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: false
+      }
+    }
+  });
+</script>
+<div class="row">
+  <div class="col">
+    <h4 class="text-left text-muted" style="font-family: 'Montserrat', sans-serif;">
+      Next Scheduled event</h4>
+  </div>
+</div>
+<hr style="opacity: .5;">
+<div class="panel-group border rounded" style=" padding: 25px 25px 25px 25px; box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);">
+  <div class="row">
+    <div class="col">
+      <h5 class="text-left text-primary" style="font-family: 'Montserrat', sans-serif;">
+        <%= upperCaseTxt(events[0].eventname) + " |" + events[0].groupname + "| " %> </h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <p class="text-left text-muted" style="font-family: 'Montserrat', sans-serif;">
+        |Address: <%= events[0].address %><br>
+        |Event Type: <%= upperCaseTxt(events[0].type) %><br>
+        |Date: <%= events[0].date %>
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <p style="font-family: 'Montserrat', sans-serif;">
+        <%= events[0].description %> </p>
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="container">
+
+    <div class="container mt-3">
+
+    </div>
+
+
+</div>
+
+<% } else {%>
+<hr style="opacity: 0;">
+<div class="row">
+  <div class="col">
+    <h5 class="text-center text-primary">
+      <%= user.name %>, You currently do not have any events scheduled.
+    </h5>
+  </div>
+</div>
+<% } %>

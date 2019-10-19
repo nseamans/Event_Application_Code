@@ -1,0 +1,92 @@
+<nav class="navbar navbar-expand-sm" style="box-shadow: none !important;">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="navbar-brand"><h3 class="text-primary" style="font-family: 'Fredoka One', cursive;">Event. <i class="far fa-calendar-check"></i></h3></a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+          <ul class="navbar-nav">
+                    <li class="nav-item">
+                      <h5><a class="nav-link" href="/dashboard" style="opacity: 0.75;">Dashboard</a></h5>
+                    </li>
+                    <li class="nav-item active">
+                      <h5><a class="nav-link" href="/eventsview" style="opacity: 0.75;">Event-feed</a></h5>
+                    </li>
+                  </ul>
+          <li class="nav-item">
+            <h5>
+            <a href="/users/logout" class="btn btn-warning btn-sm" style="font-family: 'Baloo Bhaijaan', 
+            cursive; box-shadow: none !important;"><i class="fas fa-sign-out-alt"></i> Log-out</a>
+            </h5>
+          </li>
+          </li>
+        </ul>
+
+      </nav>
+
+<hr style= "opacity: .0;">
+
+<div class="row">
+
+  <div class="col">
+
+    <h4 class="text-primary text-center">Event Edit</h4>
+    
+    <form action="/updateEvent" method="POST">
+      <div class="form-group">
+        <input type="text" readonly class="form-control" name="id" id="id" value="<%= event.id %>"  hidden>
+      </div>
+      <div class="form-group">
+        <input type="text" readonly class="form-control" name="email" id="email" value="<%= event.email %>" hidden>
+      </div>
+      <div class="form-group">
+        <label for="address" class="text-primary">Address:</label>
+        <input type="text" class="form-control" name="address" id="address" value="<%= event.address %>">
+      </div>
+      <div class="form-group">
+        <label for="eventname" class="text-primary">Event Name:</label>
+        <input type="text" class="form-control" name='eventname' id="eventname" value="<%= event.eventname %>">
+      </div>
+     
+      <div class="form-group">    
+
+       <label for="type" class="text-primary">Type: &nbsp;</label>
+          <div class="form-check-inline text-secondary">
+            <label class="form-check-label">
+              <input type="radio" class="form-check-input" name="type" id="type" value="Leisure">Leisure
+            </label>
+          </div>
+          <div class="form-check-inline">
+            <label class="form-check-label text-secondary">
+              <input type="radio" class="form-check-input" name="type" id="type" value="Business">Business
+            </label>
+          </div>
+          <div class="form-check-inline">
+            <label class="form-check-label text-secondary">
+              <input type="radio" class="form-check-input" name="type" id="type" value="IMPORTANT" checked="checked">Important
+            </label>
+          </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="text-primary">Description:</label>
+        <textarea type="text" class="form-control" name="description" id="description" ><%= event.description %></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="groupname" class="text-primary">Group Name:</label>
+        <input type="text" class="form-control" name="groupname" id="groupname" value="<%= event.groupname %>">
+      </div>
+
+      <div class="form-group">
+        <input type="date" name="date" id="date" value="<%= event.date %>">
+      </div>
+      
+      
+      <button type="submit" class="btn btn-primary btn-block" style="font-family: 'Baloo Bhaijaan', cursive;">Submit</button>
+    </form>
+
+  </div>
+
+</div>
